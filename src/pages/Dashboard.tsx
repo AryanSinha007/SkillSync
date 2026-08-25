@@ -129,9 +129,12 @@ function Dashboard() {
               for students like you.
             </p>
 
-            <button className="secondary-button">
-              Explore Projects
-            </button>
+            <Link
+  to="/projects"
+  className="secondary-button"
+>
+  Explore Projects
+</Link>
 
           </div>
 

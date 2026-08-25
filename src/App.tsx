@@ -11,6 +11,8 @@ import FindTeammates from "./pages/FindTeammates";
 import StudentProfile from "./pages/StudentProfile";
 import Invitations from "./pages/Invitations";
 import MyTeam from "./pages/MyTeam";
+import Projects from "./pages/Projects";
+import ProjectDetails from "./pages/ProjectDetails";
 
 function Home(){
   return (
@@ -316,6 +318,22 @@ function App() {
   element={
     <ProtectedRoute>
       <MyTeam />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/projects"
+  element={
+    <ProtectedRoute>
+      <Projects />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/projects/:id"
+  element={
+    <ProtectedRoute>
+      <ProjectDetails />
     </ProtectedRoute>
   }
 />

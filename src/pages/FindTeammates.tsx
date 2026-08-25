@@ -24,7 +24,8 @@ interface StudentSkill {
 
 function FindTeammates() {
   const [students, setStudents] = useState<Student[]>([]);
-  const [studentSkills, setStudentSkills] = useState<StudentSkill[]>([]);
+const [studentSkills, setStudentSkills] = useState<StudentSkill[]>([]);
+const [currentUserId, setCurrentUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -50,6 +51,7 @@ function FindTeammates() {
       setLoading(false);
       return;
     }
+    setCurrentUserId(user.id);
 
     const { data: profiles, error: profileError } =
       await supabase
@@ -138,20 +140,96 @@ function FindTeammates() {
   }
 
   function getMatchScore(studentId: string) {
-    const skills = getStudentSkills(studentId);
+  const mySkills = getStudentSkills(currentUserId);
+  const candidateSkills = getStudentSkills(studentId);
 
-    if (skills.length === 0) {
-      return 0;
-    }
-
-    const average =
-      skills.reduce(
-        (total, skill) => total + skill.proficiency,
-        0
-      ) / skills.length;
-
-    return Math.round((average / 5) * 100);
+  if (mySkills.length === 0 || candidateSkills.length === 0) {
+    return 0;
   }
+
+  const mySkillMap = new Map(
+    mySkills.map((item) => [
+      item.skill?.name?.toLowerCase(),
+      item.proficiency,
+    ])
+  );
+
+  const candidateSkillMap = new Map(
+    candidateSkills.map((item) => [
+      item.skill?.name?.toLowerCase(),
+      item.proficiency,
+    ])
+  );
+
+  const sharedSkills = candidateSkills.filter((item) =>
+    mySkillMap.has(item.skill?.name?.toLowerCase())
+  );
+
+  const complementarySkills = candidateSkills.filter(
+    (item) =>
+      !mySkillMap.has(item.skill?.name?.toLowerCase())
+  );
+
+  // -----------------------------------------
+  // 1. Shared skill compatibility
+  // -----------------------------------------
+
+  let sharedScore = 0;
+
+  if (sharedSkills.length > 0) {
+    const totalSharedScore = sharedSkills.reduce(
+      (total, skill) => {
+        const myLevel =
+          mySkillMap.get(
+            skill.skill?.name?.toLowerCase()
+          ) || 0;
+
+        const candidateLevel =
+          skill.proficiency;
+
+        const compatibility =
+          (Math.min(myLevel, candidateLevel) / 5) * 100;
+
+        return total + compatibility;
+      },
+      0
+    );
+
+    sharedScore =
+      totalSharedScore / sharedSkills.length;
+  }
+
+  // -----------------------------------------
+  // 2. Complementary skill score
+  // -----------------------------------------
+
+  const complementaryScore =
+    (complementarySkills.length /
+      candidateSkills.length) *
+    100;
+
+  // -----------------------------------------
+  // 3. Final SkillSync score
+  // -----------------------------------------
+
+  let finalScore =
+    sharedScore * 0.45 +
+    complementaryScore * 0.55;
+
+  // Small bonus for having both shared
+  // and complementary skills
+  if (
+    sharedSkills.length > 0 &&
+    complementarySkills.length > 0
+  ) {
+    finalScore += 10;
+  }
+
+  return Math.min(
+    99,
+    Math.max(1, Math.round(finalScore))
+  );
+}
 
   const categories = [
     "All",
@@ -360,11 +438,14 @@ function FindTeammates() {
                     </div>
 
                     <div className="match-score">
-                      <strong>
-                        {score}%
-                      </strong>
-                      <span>match</span>
-                    </div>
+                          <strong>
+                            {score}%
+                          </strong>
+
+                          <span>
+                            skill match
+                          </span>
+                        </div>
 
                   </div>
 
@@ -405,6 +486,26 @@ function FindTeammates() {
                       ))}
 
                   </div>
+                      <div className="match-reason">
+
+  <span className="match-reason-label">
+    WHY THIS MATCH
+  </span>
+
+  <p>
+    {getStudentSkills(student.id).some(
+      (skill) =>
+        getStudentSkills(currentUserId).some(
+          (mySkill) =>
+            mySkill.skill?.name?.toLowerCase() ===
+            skill.skill?.name?.toLowerCase()
+        )
+    )
+      ? "You share relevant skills and can complement each other's strengths."
+      : "This student brings different skills that could strengthen your team."}
+  </p>
+
+</div>
 
                   <div className="teammate-actions">
 
