@@ -49,18 +49,36 @@ function MyTeam() {
     }
 
     // Find the team the current student belongs to
-    const { data: membership, error: membershipError } =
-      await supabase
-        .from("team_members")
-        .select("team_id")
-        .eq("student_id", user.id)
-        .maybeSingle();
+    const { data: memberships, error: membershipError } =
+  await supabase
+    .from("team_members")
+    .select("team_id")
+    .eq("student_id", user.id)
+    .order("team_id", { ascending: true });
 
-    if (membershipError) {
-      setError(membershipError.message);
-      setLoading(false);
-      return;
-    }
+if (membershipError) {
+  console.error("MyTeam membership error:", membershipError);
+  alert("Membership error: " + membershipError.message);
+  setError(membershipError.message);
+  setLoading(false);
+  return;
+}
+
+if (!memberships || memberships.length === 0) {
+  setLoading(false);
+  return;
+}
+
+const membership = memberships[0];
+
+   
+if (membershipError) {
+  console.error("MyTeam membership error:", membershipError);
+  alert("Membership error: " + String(membershipError));
+  setError(String(membershipError));
+  setLoading(false);
+  return;
+}
 
     if (!membership) {
       setLoading(false);
@@ -68,18 +86,27 @@ function MyTeam() {
     }
 
     // Get team details
-    const { data: teamData, error: teamError } =
-      await supabase
-        .from("teams")
-        .select("*")
-        .eq("id", membership.team_id)
-        .single();
+    
+const { data: teamData, error: teamError } =
+  await supabase
+    .from("teams")
+    .select("*")
+    .eq("id", membership.team_id)
+    .maybeSingle();
 
     if (teamError) {
-      setError(teamError.message);
-      setLoading(false);
-      return;
-    }
+  console.error("MyTeam team error:", teamError);
+  alert("Team error: " + teamError.message);
+  setError(teamError.message);
+  setLoading(false);
+  return;
+}
+
+    if (!teamData) {
+  setError("Your team record could not be found.");
+  setLoading(false);
+  return;
+}
 
     // Get team members + profiles
     const { data: memberData, error: memberError } =
@@ -102,10 +129,12 @@ function MyTeam() {
         .eq("team_id", membership.team_id);
 
     if (memberError) {
-      setError(memberError.message);
-      setLoading(false);
-      return;
-    }
+  console.error("MyTeam members error:", memberError);
+  alert("Members error: " + memberError.message);
+  setError(memberError.message);
+  setLoading(false);
+  return;
+}
 
     setTeam(teamData);
     setMembers(

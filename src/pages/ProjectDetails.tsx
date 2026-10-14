@@ -453,7 +453,7 @@ if (matchError) {
 
     <div className="project-matches-grid">
 
-      {matches.slice(0, 6).map((match, index) => (
+      {matches.slice(0, 6).map((match) => (
 
         <article
           className="project-match-card"
@@ -533,11 +533,10 @@ if (matchError) {
 
 
           <Link
-            to={`/student/${match.student_id}`}
-            className="secondary-button"
-          >
-            View Profile →
-          </Link>
+  to={`/student/${match.student_id}?projectId=${project.id}`}
+>
+  View Profile
+</Link>
 
         </article>
 

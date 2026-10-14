@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
 interface Profile {
@@ -23,6 +28,8 @@ interface StudentSkill {
 
 function StudentProfile() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+const projectId = searchParams.get("projectId");
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [skills, setSkills] = useState<StudentSkill[]>([]);
@@ -115,13 +122,38 @@ const [inviteError, setInviteError] = useState("");
   }
 
   // Check whether a pending invitation already exists
-  const { data: existingInvitation } = await supabase
-    .from("invitations")
-    .select("id, status")
-    .eq("sender_id", user.id)
-    .eq("receiver_id", id)
-    .eq("status", "pending")
-    .maybeSingle();
+  let invitationQuery = supabase
+  .from("invitations")
+  .select("id, status")
+  .eq("sender_id", user.id)
+  .eq("receiver_id", id)
+  .eq("status", "pending");
+
+if (projectId) {
+  invitationQuery = invitationQuery.eq(
+    "project_id",
+    Number(projectId)
+  );
+} else {
+  invitationQuery = invitationQuery.is("project_id", null);
+}
+
+const { data: existingInvitation, error: checkError } =
+  await invitationQuery.maybeSingle();
+
+if (checkError) {
+  setInviteError(checkError.message);
+  setInviting(false);
+  return;
+}
+if (
+  projectId !== null &&
+  (!/^\d+$/.test(projectId) || Number(projectId) <= 0)
+) {
+  setInviteError("Invalid project ID.");
+  setInviting(false);
+  return;
+}
 
   if (existingInvitation) {
     setInviteSent(true);
@@ -129,13 +161,12 @@ const [inviteError, setInviteError] = useState("");
     return;
   }
 
-  const { error } = await supabase
-    .from("invitations")
-    .insert({
-      sender_id: user.id,
-      receiver_id: id,
-      status: "pending",
-    });
+  const { error } = await supabase.from("invitations").insert({
+  sender_id: user.id,
+  receiver_id: id,
+  status: "pending",
+  project_id: projectId ? Number(projectId) : null,
+});
 
   if (error) {
     console.error("Invitation error:", error);
@@ -235,7 +266,9 @@ const [inviteError, setInviteError] = useState("");
         ? "Sending..."
         : inviteSent
           ? "Invitation Sent ✓"
-          : "Invite to Team"}
+          : projectId
+  ? "Invite to Project"
+  : "Invite to Team"}
     </button>
 
     {inviteError && (
