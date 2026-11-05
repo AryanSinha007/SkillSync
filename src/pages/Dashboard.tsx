@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import DashboardModuleIcon from "../components/DashboardModuleIcon";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -34,8 +35,7 @@ function Dashboard() {
       <header className="dashboard-navbar">
 
         <div className="logo">
-          <span className="logo-mark">S</span>
-          <span>SkillSync</span>
+          <img className="skillsync-logo-image" src="/skillsync-logo.svg" alt="SkillSync" />
         </div>
 
         <button
@@ -70,9 +70,7 @@ function Dashboard() {
           {/* Complete Profile */}
           <div className="dashboard-card">
 
-            <span className="dashboard-card-icon">
-              👤
-            </span>
+            <DashboardModuleIcon kind="profile" />
 
             <h2>Complete your profile</h2>
 
@@ -94,9 +92,7 @@ function Dashboard() {
           {/* Find Teammates */}
           <div className="dashboard-card">
 
-            <span className="dashboard-card-icon">
-              🔎
-            </span>
+            <DashboardModuleIcon kind="teammates" />
 
             <h2>Find teammates</h2>
 
@@ -118,9 +114,7 @@ function Dashboard() {
           {/* Explore Projects */}
           <div className="dashboard-card">
 
-            <span className="dashboard-card-icon">
-              🚀
-            </span>
+            <DashboardModuleIcon kind="projects" />
 
             <h2>Explore projects</h2>
 
@@ -142,9 +136,7 @@ function Dashboard() {
           {/* Team Invitations */}
           <div className="dashboard-card">
 
-            <span className="dashboard-card-icon">
-              ✉
-            </span>
+            <DashboardModuleIcon kind="invitations" />
 
             <h2>Team invitations</h2>
 
@@ -163,9 +155,7 @@ function Dashboard() {
           </div>
           <div className="dashboard-card">
 
-  <span className="dashboard-card-icon">
-    👥
-  </span>
+  <DashboardModuleIcon kind="team" />
 
   <h2>My Team</h2>
 

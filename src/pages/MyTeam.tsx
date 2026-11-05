@@ -167,8 +167,7 @@ const { data: teamData, error: teamError } =
         <header className="my-team-navbar">
 
           <Link to="/dashboard" className="logo">
-            <span className="logo-mark">S</span>
-            <span>SkillSync</span>
+            <img className="skillsync-logo-image" src="/skillsync-logo.svg" alt="SkillSync" />
           </Link>
 
           <Link
@@ -222,8 +221,7 @@ const { data: teamData, error: teamError } =
       <header className="my-team-navbar">
 
         <Link to="/dashboard" className="logo">
-          <span className="logo-mark">S</span>
-          <span>SkillSync</span>
+          <img className="skillsync-logo-image" src="/skillsync-logo.svg" alt="SkillSync" />
         </Link>
 
         <Link

@@ -159,8 +159,7 @@ function Invitations() {
       <header className="invitations-navbar">
 
         <Link to="/dashboard" className="logo">
-          <span className="logo-mark">S</span>
-          <span>SkillSync</span>
+          <img className="skillsync-logo-image" src="/skillsync-logo.svg" alt="SkillSync" />
         </Link>
 
         <Link

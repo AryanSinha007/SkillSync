@@ -21,8 +21,7 @@ function Home(){
       {/* Navigation */}
       <header className="navbar">
         <div className="logo">
-          <span className="logo-mark">S</span>
-          <span>SkillSync</span>
+          <img className="skillsync-logo-image" src="/skillsync-logo.svg" alt="SkillSync" />
         </div>
 
         <nav className="nav-links">
@@ -248,8 +247,7 @@ function Home(){
 
       <footer>
         <div className="logo">
-          <span className="logo-mark">S</span>
-          <span>SkillSync</span>
+          <img className="skillsync-logo-image" src="/skillsync-logo.svg" alt="SkillSync" />
         </div>
 
         <p>Skill-based team formation for students.</p>
