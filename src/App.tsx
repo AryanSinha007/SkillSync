@@ -13,6 +13,7 @@ import Invitations from "./pages/Invitations";
 import MyTeam from "./pages/MyTeam";
 import Projects from "./pages/Projects";
 import ProjectDetails from "./pages/ProjectDetails";
+import SkillSyncChatbot from "./components/SkillSyncChatbot";
 
 function Home(){
   return (
@@ -338,6 +339,7 @@ function App() {
   }
 />
       </Routes>
+      <SkillSyncChatbot />
     </BrowserRouter>
   );
 }
