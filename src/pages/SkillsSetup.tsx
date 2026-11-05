@@ -197,14 +197,6 @@ function SkillsSetup() {
     )
   );
 
-  function getProficiencyLabel(level: number) {
-    if (level === 1) return "Beginner";
-    if (level === 2) return "Basic";
-    if (level === 3) return "Intermediate";
-    if (level === 4) return "Advanced";
-    return "Expert";
-  }
-
   if (loading) {
     return (
       <div className="auth-page">

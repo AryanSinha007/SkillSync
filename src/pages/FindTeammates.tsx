@@ -154,13 +154,6 @@ const [currentUserId, setCurrentUserId] = useState("");
     ])
   );
 
-  const candidateSkillMap = new Map(
-    candidateSkills.map((item) => [
-      item.skill?.name?.toLowerCase(),
-      item.proficiency,
-    ])
-  );
-
   const sharedSkills = candidateSkills.filter((item) =>
     mySkillMap.has(item.skill?.name?.toLowerCase())
   );

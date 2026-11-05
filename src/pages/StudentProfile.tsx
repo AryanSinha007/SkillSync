@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Link,
-  useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
